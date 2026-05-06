@@ -1,0 +1,14 @@
+{
+  "name": "highlow",
+  "private": true,
+  "packageManager": "pnpm@10.30.3",
+  "engines": { "node": ">=22" },
+  "pnpm": { "onlyBuiltDependencies": ["esbuild"] },
+  "scripts": {
+    "dev": "pnpm --filter @highlow/web dev",
+    "build": "pnpm --filter @highlow/web build",
+    "preview": "pnpm --filter @highlow/web preview",
+    "typecheck": "pnpm --filter @highlow/web exec tsc -b",
+    "test": "pnpm --filter @highlow/web test"
+  }
+}
