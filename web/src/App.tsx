@@ -126,6 +126,7 @@ export default function App() {
             { label: "Best", value: best },
           ]}
           actions={<GameAuth />}
+          rules={<div><h3 style={{fontWeight:700}}>High / Low</h3><h4 style={{fontWeight:600}}>Rules</h4><ul><li>A card is shown</li><li>Guess if the next card will be higher or lower</li><li>Build a streak</li><li>Wrong guess = game over</li><li>Ties are a free pass</li></ul></div>}
         />
       }
     >
