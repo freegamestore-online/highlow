@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { GameShell, GameTopbar } from "@freeappstore/games";
+import { GameShell, GameTopbar } from "@freegamestore/games";
 
 const SUITS = ["♠", "♥", "♦", "♣"] as const;
 const RANKS = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"] as const;
