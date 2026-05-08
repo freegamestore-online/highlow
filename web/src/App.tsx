@@ -209,4 +209,5 @@ const primaryButton: React.CSSProperties = {
   fontSize: "0.9rem",
   cursor: "pointer",
   minWidth: "100px",
+  minHeight: "2.75rem",
 };
