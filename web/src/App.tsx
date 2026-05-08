@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Shell } from "./components/Shell";
+import { GameShell, GameTopbar } from "@freeappstore/games";
 
 const SUITS = ["♠", "♥", "♦", "♣"] as const;
 const RANKS = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"] as const;
@@ -115,63 +115,65 @@ export default function App() {
   }
 
   return (
-    <Shell>
-      <div style={{ maxWidth: "520px", margin: "0 auto", padding: "1.5rem 0", textAlign: "center" }}>
-        <h1
-          style={{
-            fontFamily: "Fraunces, serif",
-            fontSize: "1.75rem",
-            fontWeight: 800,
-            marginBottom: "0.25rem",
-          }}
-        >
-          High / Low
-        </h1>
-        <p style={{ color: "var(--muted)", marginBottom: "2rem" }}>
-          Will the next card be higher or lower? Build a streak.
-        </p>
+    <GameShell
+      topbar={
+        <GameTopbar
+          title="High / Low"
+          stats={[
+            { label: "Streak", value: streak, accent: true },
+            { label: "Best", value: best },
+          ]}
+        />
+      }
+    >
+      <div className="relative w-full h-full">
+        <div style={{ maxWidth: "520px", margin: "0 auto", padding: "1.5rem 0", textAlign: "center" }}>
+          <p style={{ color: "var(--muted)", marginBottom: "2rem" }}>
+            Will the next card be higher or lower? Build a streak.
+          </p>
 
-        <div style={{ display: "flex", justifyContent: "center", marginBottom: "1.5rem" }}>
-          <CardView card={current} />
-        </div>
-
-        {hint && (
-          <p style={{ color: "var(--muted)", marginBottom: "1rem", minHeight: "1.3em" }}>{hint}</p>
-        )}
-
-        {state === "playing" ? (
-          <div style={{ display: "flex", gap: "0.75rem", justifyContent: "center", flexWrap: "wrap" }}>
-            <button type="button" onClick={() => guess("lower")} style={primaryButton}>
-              ↓ Lower
-            </button>
-            <button type="button" onClick={() => guess("higher")} style={primaryButton}>
-              ↑ Higher
-            </button>
+          <div style={{ display: "flex", justifyContent: "center", marginBottom: "1.5rem" }}>
+            <CardView card={current} />
           </div>
-        ) : (
-          <div>
-            <p
-              style={{
-                fontFamily: "Fraunces, serif",
-                fontSize: "1.3rem",
-                fontWeight: 700,
-                marginBottom: "0.75rem",
-              }}
-            >
-              Game over — streak {streak}.
-            </p>
-            <button type="button" onClick={reset} style={primaryButton}>
-              Play again
-            </button>
-          </div>
-        )}
 
-        <div style={{ display: "flex", gap: "1.5rem", justifyContent: "center", marginTop: "2rem" }}>
-          <Stat label="Streak" value={streak} />
-          <Stat label="Best" value={best} />
+          {hint && (
+            <p style={{ color: "var(--muted)", marginBottom: "1rem", minHeight: "1.3em" }}>{hint}</p>
+          )}
+
+          {state === "playing" ? (
+            <div style={{ display: "flex", gap: "0.75rem", justifyContent: "center", flexWrap: "wrap" }}>
+              <button type="button" onClick={() => guess("lower")} style={primaryButton}>
+                ↓ Lower
+              </button>
+              <button type="button" onClick={() => guess("higher")} style={primaryButton}>
+                ↑ Higher
+              </button>
+            </div>
+          ) : (
+            <div>
+              <p
+                style={{
+                  fontFamily: "Fraunces, serif",
+                  fontSize: "1.3rem",
+                  fontWeight: 700,
+                  marginBottom: "0.75rem",
+                }}
+              >
+                Game over — streak {streak}.
+              </p>
+              <button type="button" onClick={reset} style={primaryButton}>
+                Play again
+              </button>
+            </div>
+          )}
+
+          <div style={{ display: "flex", gap: "1.5rem", justifyContent: "center", marginTop: "2rem" }}>
+            <Stat label="Streak" value={streak} />
+            <Stat label="Best" value={best} />
+          </div>
         </div>
       </div>
-    </Shell>
+    </GameShell>
   );
 }
 
