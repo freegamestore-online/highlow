@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { GameShell, GameTopbar } from "@freegamestore/games";
+import { GameShell, GameTopbar, GameAuth } from "@freegamestore/games";
 
 const SUITS = ["♠", "♥", "♦", "♣"] as const;
 const RANKS = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"] as const;
@@ -125,6 +125,7 @@ export default function App() {
             { label: "Streak", value: streak, accent: true },
             { label: "Best", value: best },
           ]}
+          actions={<GameAuth />}
         />
       }
     >
