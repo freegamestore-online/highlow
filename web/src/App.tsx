@@ -25,37 +25,39 @@ function CardView({ card }: { card: Card }) {
   return (
     <div
       style={{
-        width: 140,
-        height: 200,
+        width: "min(140px, 28vw)",
+        height: "min(200px, 30svh)",
         border: "1px solid var(--line-strong)",
         borderRadius: "0.85rem",
         background: "var(--paper)",
         display: "flex",
         flexDirection: "column",
         justifyContent: "space-between",
-        padding: "0.75rem 1rem",
+        padding: "0.5rem 0.75rem",
         fontFamily: "Fraunces, serif",
         boxShadow: "0 4px 14px rgba(0,0,0,0.06)",
       }}
     >
-      <span style={{ fontSize: "1.4rem", fontWeight: 700, color: isRed ? "#dc2626" : "var(--ink)" }}>
+      <span style={{ fontSize: "clamp(1rem, 2.5svh, 1.4rem)", fontWeight: 700, lineHeight: 1.1, color: isRed ? "#dc2626" : "var(--ink)" }}>
         {card.rank}
         <br />
         {card.suit}
       </span>
       <span
         style={{
-          fontSize: "3.2rem",
+          fontSize: "clamp(1.6rem, 5svh, 3.2rem)",
           color: isRed ? "#dc2626" : "var(--ink)",
           alignSelf: "center",
+          lineHeight: 1,
         }}
       >
         {card.suit}
       </span>
       <span
         style={{
-          fontSize: "1.4rem",
+          fontSize: "clamp(1rem, 2.5svh, 1.4rem)",
           fontWeight: 700,
+          lineHeight: 1.1,
           color: isRed ? "#dc2626" : "var(--ink)",
           textAlign: "right",
           transform: "rotate(180deg)",
@@ -126,18 +128,18 @@ export default function App() {
         />
       }
     >
-      <div className="relative w-full h-full">
-        <div style={{ maxWidth: "520px", margin: "0 auto", padding: "1.5rem 0", textAlign: "center" }}>
-          <p style={{ color: "var(--muted)", marginBottom: "2rem" }}>
+      <div className="relative w-full h-full overflow-y-auto">
+        <div style={{ maxWidth: "520px", margin: "0 auto", padding: "0.75rem 0", textAlign: "center" }}>
+          <p style={{ color: "var(--muted)", marginBottom: "0.75rem", fontSize: "0.85rem" }}>
             Will the next card be higher or lower? Build a streak.
           </p>
 
-          <div style={{ display: "flex", justifyContent: "center", marginBottom: "1.5rem" }}>
+          <div style={{ display: "flex", justifyContent: "center", marginBottom: "0.75rem" }}>
             <CardView card={current} />
           </div>
 
           {hint && (
-            <p style={{ color: "var(--muted)", marginBottom: "1rem", minHeight: "1.3em" }}>{hint}</p>
+            <p style={{ color: "var(--muted)", marginBottom: "0.5rem", minHeight: "1.3em", fontSize: "0.85rem" }}>{hint}</p>
           )}
 
           {state === "playing" ? (
@@ -167,7 +169,7 @@ export default function App() {
             </div>
           )}
 
-          <div style={{ display: "flex", gap: "1.5rem", justifyContent: "center", marginTop: "2rem" }}>
+          <div style={{ display: "flex", gap: "1.5rem", justifyContent: "center", marginTop: "0.75rem" }}>
             <Stat label="Streak" value={streak} />
             <Stat label="Best" value={best} />
           </div>
@@ -200,11 +202,11 @@ const primaryButton: React.CSSProperties = {
   background: "var(--accent)",
   color: "white",
   border: 0,
-  padding: "0.75rem 1.6rem",
+  padding: "0.5rem 1.4rem",
   borderRadius: "0.75rem",
   fontFamily: "inherit",
   fontWeight: 700,
-  fontSize: "0.95rem",
+  fontSize: "0.9rem",
   cursor: "pointer",
-  minWidth: "120px",
+  minWidth: "100px",
 };
