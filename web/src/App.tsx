@@ -26,7 +26,7 @@ function CardView({ card }: { card: Card }) {
     <div
       style={{
         width: "min(140px, 28vw)",
-        height: "min(200px, 30svh)",
+        height: "min(200px, 26svh)",
         border: "1px solid var(--line-strong)",
         borderRadius: "0.85rem",
         background: "var(--paper)",
@@ -131,12 +131,12 @@ export default function App() {
       }
     >
       <div className="relative w-full h-full overflow-y-auto">
-        <div style={{ maxWidth: "520px", margin: "0 auto", padding: "0.75rem 0", textAlign: "center" }}>
-          <p style={{ color: "var(--muted)", marginBottom: "0.75rem", fontSize: "0.85rem" }}>
+        <div style={{ maxWidth: "520px", margin: "0 auto", padding: "0.5rem 0", textAlign: "center" }}>
+          <p style={{ color: "var(--muted)", marginBottom: "0.5rem", fontSize: "0.8rem" }}>
             Will the next card be higher or lower? Build a streak.
           </p>
 
-          <div style={{ display: "flex", justifyContent: "center", marginBottom: "0.75rem" }}>
+          <div style={{ display: "flex", justifyContent: "center", marginBottom: "0.5rem" }}>
             <CardView card={current} />
           </div>
 
@@ -171,7 +171,7 @@ export default function App() {
             </div>
           )}
 
-          <div style={{ display: "flex", gap: "1.5rem", justifyContent: "center", marginTop: "0.75rem" }}>
+          <div style={{ display: "flex", gap: "1.5rem", justifyContent: "center", marginTop: "0.5rem" }}>
             <Stat label="Streak" value={streak} />
             <Stat label="Best" value={best} />
           </div>
@@ -184,7 +184,7 @@ export default function App() {
 function Stat({ label, value }: { label: string; value: number }) {
   return (
     <div>
-      <div style={{ fontFamily: "Fraunces, serif", fontSize: "1.6rem", fontWeight: 700 }}>{value}</div>
+      <div style={{ fontFamily: "Fraunces, serif", fontSize: "clamp(1.2rem, 3svh, 1.6rem)", fontWeight: 700 }}>{value}</div>
       <div
         style={{
           color: "var(--muted)",
