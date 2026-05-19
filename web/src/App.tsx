@@ -1,5 +1,13 @@
-import { useState } from "react";
-import { GameShell, GameTopbar, GameAuth } from "@freegamestore/games";
+import { useRef, useState } from "react";
+import { GameShell, GameTopbar, GameAuth, useGameSounds } from "@freegamestore/games";
+
+type SoundsApi = ReturnType<typeof useGameSounds>;
+
+function AudioBridge({ apiRef }: { apiRef: React.MutableRefObject<SoundsApi | null> }) {
+  const sounds = useGameSounds();
+  apiRef.current = sounds;
+  return null;
+}
 
 const SUITS = ["♠", "♥", "♦", "♣"] as const;
 const RANKS = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"] as const;
@@ -79,11 +87,13 @@ export default function App() {
   const [best, setBest] = useState(0);
   const [state, setState] = useState<GameState>("playing");
   const [hint, setHint] = useState<string | null>(null);
+  const audioRef = useRef<SoundsApi | null>(null);
 
   function guess(direction: "higher" | "lower") {
     const next = newCard();
     const cur = rankValue(current.rank);
     const nxt = rankValue(next.rank);
+    audioRef.current?.playTick();
     let correct: boolean;
     if (cur === nxt) {
       // tie counts as a free pass
@@ -102,10 +112,17 @@ export default function App() {
       setBest((b) => Math.max(b, newStreak));
       setHint(`${next.rank}${next.suit} — ${direction}, nice.`);
       setCurrent(next);
+      if (newStreak > 0 && newStreak % 5 === 0) {
+        audioRef.current?.playLevelUp();
+      } else {
+        audioRef.current?.playScore();
+      }
     } else {
       setHint(`${next.rank}${next.suit} — ${direction === "higher" ? "lower" : "higher"} than ${current.rank}${current.suit}.`);
       setCurrent(next);
       setState("lost");
+      audioRef.current?.playError();
+      audioRef.current?.playGameOver();
     }
   }
 
@@ -130,6 +147,7 @@ export default function App() {
         />
       }
     >
+      <AudioBridge apiRef={audioRef} />
       <div className="relative w-full h-full overflow-y-auto">
         <div style={{ maxWidth: "520px", margin: "0 auto", padding: "0.5rem 0", textAlign: "center" }}>
           <p style={{ color: "var(--muted)", marginBottom: "0.5rem", fontSize: "0.8rem" }}>
