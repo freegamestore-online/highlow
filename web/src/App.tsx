@@ -1,5 +1,6 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { GameShell, GameTopbar, GameAuth, useGameSounds } from "@freegamestore/games";
+import { useHighScore } from "./hooks/useHighScore";
 
 type SoundsApi = ReturnType<typeof useGameSounds>;
 
@@ -84,12 +85,13 @@ type GameState = "playing" | "lost";
 export default function App() {
   const [current, setCurrent] = useState<Card>(() => newCard());
   const [streak, setStreak] = useState(0);
-  const [best, setBest] = useState(0);
+  const [best, updateBest] = useHighScore("highlow-best");
   const [state, setState] = useState<GameState>("playing");
   const [hint, setHint] = useState<string | null>(null);
   const audioRef = useRef<SoundsApi | null>(null);
 
   function guess(direction: "higher" | "lower") {
+    if (state !== "playing") return;
     const next = newCard();
     const cur = rankValue(current.rank);
     const nxt = rankValue(next.rank);
@@ -97,7 +99,7 @@ export default function App() {
     let correct: boolean;
     if (cur === nxt) {
       // tie counts as a free pass
-      setHint("Tie — try again with the same card.");
+      setHint(`${next.rank}${next.suit} — tie, free pass. Guess again.`);
       setCurrent(next);
       return;
     } else if (direction === "higher") {
@@ -109,7 +111,7 @@ export default function App() {
     if (correct) {
       const newStreak = streak + 1;
       setStreak(newStreak);
-      setBest((b) => Math.max(b, newStreak));
+      updateBest(newStreak);
       setHint(`${next.rank}${next.suit} — ${direction}, nice.`);
       setCurrent(next);
       if (newStreak > 0 && newStreak % 5 === 0) {
@@ -133,6 +135,23 @@ export default function App() {
     setState("playing");
   }
 
+  // Keyboard: ↑ higher, ↓ lower, Enter/Space to play again
+  // (re-subscribed each render so the handler sees the current card and streak)
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (state === "playing" && (e.key === "ArrowUp" || e.key === "ArrowDown")) {
+        e.preventDefault();
+        if (!e.repeat) guess(e.key === "ArrowUp" ? "higher" : "lower");
+      } else if (state === "lost" && (e.key === "Enter" || e.key === " ")) {
+        if (e.target instanceof Element && e.target.closest("button, a, input, textarea, select")) return;
+        e.preventDefault();
+        reset();
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  });
+
   return (
     <GameShell
       topbar={
@@ -143,7 +162,7 @@ export default function App() {
             { label: "Best", value: best },
           ]}
           actions={<GameAuth />}
-          rules={<div><h3 style={{fontWeight:700}}>High / Low</h3><h4 style={{fontWeight:600}}>Rules</h4><ul><li>A card is shown</li><li>Guess if the next card will be higher or lower</li><li>Build a streak</li><li>Wrong guess = game over</li><li>Ties are a free pass</li></ul></div>}
+          rules={<div><h3 style={{fontWeight:700}}>High / Low</h3><h4 style={{fontWeight:600}}>Rules</h4><ul><li>A card is shown</li><li>Guess if the next card will be higher or lower</li><li>Build a streak</li><li>Wrong guess = game over</li><li>Ties are a free pass</li></ul><h4 style={{fontWeight:600}}>Controls</h4><ul><li>Tap Higher / Lower, or press ↑ / ↓</li><li>Enter or Space to play again</li></ul></div>}
         />
       }
     >
@@ -188,33 +207,9 @@ export default function App() {
               </button>
             </div>
           )}
-
-          <div style={{ display: "flex", gap: "1.5rem", justifyContent: "center", marginTop: "0.5rem" }}>
-            <Stat label="Streak" value={streak} />
-            <Stat label="Best" value={best} />
-          </div>
         </div>
       </div>
     </GameShell>
-  );
-}
-
-function Stat({ label, value }: { label: string; value: number }) {
-  return (
-    <div>
-      <div style={{ fontFamily: "Fraunces, serif", fontSize: "clamp(1.2rem, 3svh, 1.6rem)", fontWeight: 700 }}>{value}</div>
-      <div
-        style={{
-          color: "var(--muted)",
-          fontSize: "0.7rem",
-          textTransform: "uppercase",
-          letterSpacing: "0.1em",
-          fontWeight: 600,
-        }}
-      >
-        {label}
-      </div>
-    </div>
   );
 }
 

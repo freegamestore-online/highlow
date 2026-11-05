@@ -37,7 +37,7 @@ export default defineConfig({
       manifest: {
         name: "highlow",
         short_name: "highlow",
-        description: "highlow — free forever",
+        description: "Free High / Low card game — part of FreeGameStore",
         start_url: "/",
         display: "standalone", orientation: "any",
         background_color: "#0f0f0f",
